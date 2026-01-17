@@ -1,0 +1,70 @@
+# ---------------------------------
+# SERVER CONFIGURATION
+# ---------------------------------
+server:
+  port: 8080
+
+# ---------------------------------
+# LOGGING CONFIGURATION
+# ---------------------------------
+logging:
+  level:
+    # Set the root logger to INFO
+    root: INFO
+    # Set your application's package to DEBUG for more detailed logs
+    com.example.ai: DEBUG
+    # Set Spring AI to DEBUG to see prompts, responses, and embedding activity
+    org.springframework.ai: DEBUG
+
+# ---------------------------------
+# SPRING AI (OPENAI) CONFIGURATION
+# ---------------------------------
+spring:
+  ai:
+    openai:
+      # Best practice: Do not hardcode your API key.
+      # Use an environment variable (OPENAI_API_KEY) or other secret management.
+      api-key: ${OPENAI_API_KEY}
+      # Configuration for the chat model (for generating answers)
+      chat:
+        options:
+          # Use a modern, cost-effective model. gpt-4o-mini is a great choice.
+          model: gpt-4o-mini
+          temperature: 0.2 # Lower temperature for more factual, less creative answers
+      # Configuration for the embedding model (for vectorizing text)
+      embedding:
+        options:
+          # Use OpenAI's latest small embedding model. Ensure your DB vector dimension matches.
+          # text-embedding-3-small has a dimension of 1536.
+          model: text-embedding-3-small
+
+# ---------------------------------
+# DATABASE (POSTGRESQL + PGVECTOR) CONFIGURATION
+# ---------------------------------
+
+  datasource:
+    # The JDBC URL for your PostgreSQL database.
+    # Change 'localhost:5432' and 'rag_db' to match your setup.
+    url: jdbc:postgresql://localhost:5432/rag_db
+    username: your_postgres_user # Replace with your database username
+    password: your_postgres_password # Replace with your database password
+    # The JDBC driver for PostgreSQL
+    driver-class-name: org.postgresql.Driver
+  # Optional but recommended: Specify that you are not using Hibernate's DDL
+  # and will manage the schema with migration scripts (like the ones from Phase D).
+  jpa:
+    hibernate:
+      ddl-auto: none
+  # Optional: Configure JDBC batch size for performance with your batch upserts
+  jdbc:
+    batch-size: 100
+
+
+
+embedding-service:
+  # provider: "openai" # Use "openai" for production, "mock" for tests.
+  provider: "mock" # Default to mock for safety during development
+  batch-size: 100
+  dimensions: 1536 # Must match the model's output and your DB schema
+  openai:
+    embedding-model: "text-embedding-3-small"
