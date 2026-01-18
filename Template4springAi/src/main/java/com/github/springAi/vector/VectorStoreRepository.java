@@ -3,6 +3,7 @@ package com.github.springAi.vector;
 import com.github.springAi.domain.DocumentSegment;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface VectorStoreRepository {
@@ -12,13 +13,14 @@ public interface VectorStoreRepository {
     void upsertBatch(List<DocumentSegment> segments, List<float[]> embeddings);
 
     /**
-     * Find nearest neighbors.
-     * @param talkId Filter by talk context
-     * @param queryEmbedding The vector to search for
-     * @param topK Number of results to return
+     * Finds the top K nearest neighbors to a query vector, with optional metadata filtering.
+     *
+     * @param queryEmbedding The vector to search for.
+     * @param topK           The number of results to return.
+     * @param filters        A map of metadata key-value pairs to apply as a WHERE clause. Can be null or empty.
+     * @return A list of matching DocumentSegments.
      */
-    List<DocumentSegment> search(UUID talkId, String userId, float[] queryEmbedding, int topK);
-
+    List<DocumentSegment> search(float[] queryEmbedding, int topK, Map<String, Object> filters);
     /**
      * Delete vectors for a specific talk (cleanup).
      */

@@ -117,17 +117,17 @@
   </build>
 
   <repositories>
-    <repository>
-      <id>aliyun</id>
-      <name>Aliyun Maven</name>
-      <url>https://maven.aliyun.com/repository/public</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
+<!--    <repository>-->
+<!--      <id>aliyun</id>-->
+<!--      <name>Aliyun Maven</name>-->
+<!--      <url>https://maven.aliyun.com/repository/public</url>-->
+<!--      <releases>-->
+<!--        <enabled>true</enabled>-->
+<!--      </releases>-->
+<!--      <snapshots>-->
+<!--        <enabled>false</enabled>-->
+<!--      </snapshots>-->
+<!--    </repository>-->
 
     <repository>
       <id>spring-milestones</id>

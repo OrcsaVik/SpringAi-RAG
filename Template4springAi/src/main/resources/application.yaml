@@ -15,7 +15,7 @@ logging:
     com.example.ai: DEBUG
     # Set Spring AI to DEBUG to see prompts, responses, and embedding activity
     org.springframework.ai: DEBUG
-
+I
 # ---------------------------------
 # SPRING AI (OPENAI) CONFIGURATION
 # ---------------------------------
@@ -26,17 +26,17 @@ spring:
       # Use an environment variable (OPENAI_API_KEY) or other secret management.
       api-key: ${OPENAI_API_KEY}
       # Configuration for the chat model (for generating answers)
-      chat:
-        options:
-          # Use a modern, cost-effective model. gpt-4o-mini is a great choice.
-          model: gpt-4o-mini
-          temperature: 0.2 # Lower temperature for more factual, less creative answers
-      # Configuration for the embedding model (for vectorizing text)
-      embedding:
-        options:
-          # Use OpenAI's latest small embedding model. Ensure your DB vector dimension matches.
-          # text-embedding-3-small has a dimension of 1536.
-          model: text-embedding-3-small
+#      chat:
+#        options:
+#          # Use a modern, cost-effective model. gpt-4o-mini is a great choice.
+#          model: gpt-4o-mini
+#          temperature: 0.2 # Lower temperature for more factual, less creative answers
+#      # Configuration for the embedding model (for vectorizing text)
+#      embedding:
+#        options:
+#          # Use OpenAI's latest small embedding model. Ensure your DB vector dimension matches.
+#          # text-embedding-3-small has a dimension of 1536.
+#          model: text-embedding-3-small
 
 # ---------------------------------
 # DATABASE (POSTGRESQL + PGVECTOR) CONFIGURATION
@@ -68,3 +68,13 @@ embedding-service:
   dimensions: 1536 # Must match the model's output and your DB schema
   openai:
     embedding-model: "text-embedding-3-small"
+
+
+# ---------------------------------
+# YOUR CUSTOM RAG SERVICE CONFIGURATION
+# This section is now used by RagServiceProperties and AiClientConfig
+# ---------------------------------
+rag-service:
+  chat-model: "gpt-4o-mini"
+  temperature: 0.2
+  context-token-budget: 4000
