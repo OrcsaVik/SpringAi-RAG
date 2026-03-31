@@ -56,6 +56,53 @@ graph TD
 *   **`VectorStoreRetriever`**: Takes a user query, generates its embedding, and queries the `VectorStoreRepository` to find the most relevant document segments.
 *   **`PostgreSQL Database`**: The persistent storage for document segments, metadata, and their vector embeddings.
 
+## Core Design Report (Why / How / What Matters)
+
+This section explains the design thinking for this repository and how it relates to ideas from [OpenManus](https://github.com/FoundationAgents/OpenManus/tree/main).
+
+### 1) Why this repo is designed this way
+
+The core goal of this repository is **reliable RAG infrastructure**:
+- ingest documents safely and repeatedly (idempotent ingestion via content hashing),
+- convert content into embeddings,
+- retrieve the most relevant chunks for a user query.
+
+Instead of starting with a large multi-agent runtime, this project keeps a **single clear pipeline** first. This reduces complexity and helps teams validate data quality, chunking strategy, and retrieval relevance before adding autonomous agent behavior.
+
+### 2) How the design works
+
+The architecture separates responsibilities into replaceable interfaces:
+- `DocumentParser` for format-specific extraction (HTML now, other formats can be added),
+- `EmbeddingService` for model provider abstraction (mock/OpenAI),
+- `VectorStoreRepository` for storage abstraction (PostgreSQL + pgvector).
+
+This means each core decision can evolve independently:
+- change parser without rewriting retrieval,
+- change embedding provider without rewriting ingestion,
+- change store implementation without changing application commands.
+
+### 3) Agent thinking behind this design
+
+From an agent-design perspective, this repo intentionally behaves like a **specialized retrieval agent core**:
+- it is deterministic and testable,
+- it has explicit boundaries between tools (parse/embed/store/retrieve),
+- it can become a stable subsystem used by larger agent frameworks.
+
+Compared with OpenManus (a broader general-agent framework), this repo focuses on being the **knowledge and retrieval backbone**. In practice:
+- OpenManus-style systems orchestrate many tools and plans,
+- this repo provides high-quality memory retrieval that those systems can call.
+
+### 4) What matters most if you extend this repo
+
+If you want to evolve this project toward OpenManus-like agent capabilities, prioritize:
+1. **Data quality and metadata discipline** (source, timestamp, tags, access scope),
+2. **Chunking and embedding consistency** (dimensions, overlap, model migration),
+3. **Retrieval quality controls** (top-k tuning, filtering, reranking),
+4. **Traceability** (which chunks were retrieved and why),
+5. **Safe tool boundaries** (agent orchestration should call this layer through clear interfaces).
+
+In short: this repository should remain a strong RAG core. Higher-level autonomous planning can be added on top, but reliable retrieval quality is the foundation that makes any agent trustworthy.
+
 ## Getting Started
 
 ### Prerequisites
